@@ -9,11 +9,11 @@ def read_args(argv):
     arg_distribution_id = ""
     arg_prefix_to_remove = ""
     arg_encoding = ""
-    arg_help = "{0} -f <bundles-file> -d <distribution-id> -p <prefix-to-remove> -e <encoding>".format(argv[0])
+    arg_help = "{0} -f <bundles-file> -d <distribution-id> -p <prefix-to-remove> -u <utf>".format(argv[0])
 
     try:
-        opts, args = getopt.getopt(argv[1:], "hf:d:p:e:", ["help", "bundles-file=",
-                                                           "distribution-id=", "prefix-to-remove=", "encoding="])
+        opts, args = getopt.getopt(argv[1:], "hf:d:p:u:", ["help", "bundles-file=",
+                                                           "distribution-id=", "prefix-to-remove=", "utf="])
     except:
         print(arg_help)
         sys.exit(2)
@@ -28,7 +28,7 @@ def read_args(argv):
             arg_distribution_id = arg
         elif opt in ("-p", "--prefix-to-remove"):
             arg_prefix_to_remove = arg
-        elif opt in ("-e", "--encoding"):
+        elif opt in ("-u", "--utf"):
             arg_encoding = arg
 
     def extract_s3_lines(file_path):
