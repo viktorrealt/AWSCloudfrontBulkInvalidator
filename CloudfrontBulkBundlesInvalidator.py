@@ -32,7 +32,7 @@ def read_args(argv):
         s3_lines = []
 
         try:
-            with open(file_path, 'r') as file:
+            with open(file_path, 'r', encoding='utf-16') as file:
                 for line in file:
                     index = line.find('s3://')
                     if index != -1:
