@@ -8,11 +8,12 @@ def read_args(argv):
     arg_bundles_list_file = ""
     arg_distribution_id = ""
     arg_prefix_to_remove = ""
-    arg_help = "{0} -f <bundles-file> -d <distribution-id> -p <prefix-to-remove>".format(argv[0])
+    arg_encoding = ""
+    arg_help = "{0} -f <bundles-file> -d <distribution-id> -p <prefix-to-remove> -e <encoding>".format(argv[0])
 
     try:
-        opts, args = getopt.getopt(argv[1:], "hf:d:p:", ["help", "bundles-file=",
-                                                        "distribution-id=", "prefix-to-remove="])
+        opts, args = getopt.getopt(argv[1:], "hf:d:p:e:", ["help", "bundles-file=",
+                                                           "distribution-id=", "prefix-to-remove=", "encoding="])
     except:
         print(arg_help)
         sys.exit(2)
@@ -27,23 +28,27 @@ def read_args(argv):
             arg_distribution_id = arg
         elif opt in ("-p", "--prefix-to-remove"):
             arg_prefix_to_remove = arg
+        elif opt in ("-e", "--encoding"):
+            arg_encoding = arg
 
     def extract_s3_lines(file_path):
         s3_lines = []
 
         try:
-            with open(file_path, 'r', encoding='utf-16') as file:
-                for line in file:
-                    index = line.find('s3://')
-                    if index != -1:
-                        s3_lines.append(line[index:].strip())
-
+            if len(arg_encoding) > 0:
+                with open(file_path, 'r', encoding=arg_encoding) as file:
+                    for line in file:
+                        index = line.find('s3://')
+                        if index != -1:
+                            s3_lines.append(line[index:].strip())
+            else:
+                print("Encoding parameter doesn't set")
         except FileNotFoundError:
             print(f"File not found: {file_path}")
 
         prefix_to_remove = arg_prefix_to_remove  # example "s3://bucket-name/bundles/stage"
         if len(prefix_to_remove) > 0:
-            s3_lines_normalized =[s.replace(prefix_to_remove, "") for s in s3_lines]
+            s3_lines_normalized = [s.replace(prefix_to_remove, "") for s in s3_lines]
             return s3_lines_normalized
         else:
             return s3_lines
